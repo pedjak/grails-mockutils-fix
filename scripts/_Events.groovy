@@ -1,7 +1,15 @@
+
 // fix for http://jira.grails.org/browse/GRAILS-7309 issue
 // author pedjak@gmail.com
- 
-eventAllTestsStart = {
+
+import java.beans.Introspector
+import java.beans.PropertyDescriptor
+import org.codehaus.groovy.grails.commons.DefaultGrailsDomainClass
+import grails.test.MockUtils
+import org.codehaus.groovy.grails.commons.GrailsClassUtils
+import grails.validation.ValidationException
+
+eventTestPhasesStart = {
     // patch MockUtils.addDynamicInstanceMethods before executing any test
     def fixedAddDynamicInstanceMethods = { mockUtils, Class clazz, List testInstances ->
         // Add save() method.
