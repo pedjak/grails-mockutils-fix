@@ -16,5 +16,5 @@ add following fragment to your BuildConfig.groovy:
      }
      
      plugins {
-        test 'org.grails.plugins:mockutils-fix:0.1'
+        test 'org.grails.plugins:mockutils-fix:1.3.7'
      }
