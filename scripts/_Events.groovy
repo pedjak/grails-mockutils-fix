@@ -14,8 +14,9 @@ eventTestPhasesStart = {
     def fixedAddDynamicInstanceMethods = { mockUtils, Class clazz, List testInstances ->
         // Add save() method.
         clazz.metaClass.save = { Map args = [:] ->
+	    
             if(validate()) {
-
+		mockUtils.triggerEvent delegate, 'beforeValidate'
                 def properties = Introspector.getBeanInfo(clazz).propertyDescriptors
                 def mapping = mockUtils.evaluateMapping(clazz)
 
@@ -167,7 +168,11 @@ eventTestPhasesStart = {
         mockUtils.addCountMethods(clazz, dc, rootInstances)
         mockUtils.addListMethod(clazz, rootInstances)
         mockUtils.addValidateMethod(clazz, dc, errorsMap, rootInstances)
-        // calling pathed method
+	clazz.metaClass.validate = { ->
+		mockUtils.triggerEvent(delegate, 'beforeValidate')
+		validate([:])
+	}
+        // calling patched method
         fixedAddDynamicInstanceMethods(mockUtils, clazz, rootInstances)
         mockUtils.addOtherStaticMethods(clazz, rootInstances)
 
